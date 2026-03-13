@@ -21,6 +21,19 @@ const UI = {
         activityInput.addEventListener('input', () => {
             charCount.textContent = activityInput.value.length;
         });
+
+        // Character counter for monster description
+        const monsterDesc = document.getElementById('monster-description');
+        const monsterCharCount = document.getElementById('monster-char-count');
+
+        if (monsterDesc && monsterCharCount) {
+            monsterDesc.addEventListener('input', () => {
+                monsterCharCount.textContent = monsterDesc.value.length;
+            });
+        }
+
+        // Initialize blob creator
+        window.blobCreator = new BlobCreator();
     },
 
     showScreen(screenId) {
@@ -85,21 +98,50 @@ const UI = {
 
     finishMolding() {
         window.vertexDragger.disable();
-        this.showColorPicker();
+        this.showPaintingScreen();
     },
 
-    showColorPicker() {
-        this.showScreen('color-screen');
+    showPaintingScreen() {
+        this.showScreen('paint-screen');
+
+        // Initialize color picker UI
+        if (window.blobCreator) {
+            window.blobCreator.createColorPicker();
+        }
+
+        // Enable painting mode - click vertices to paint them
+        window.vertexDragger.enablePaintMode();
     },
 
-    selectEmotion(button) {
-        const color = button.getAttribute('data-color');
-        const emoji = button.getAttribute('data-emoji');
+    finishPainting() {
+        window.vertexDragger.disablePaintMode();
+        this.showNameScreen();
+    },
 
-        // Update current blob
+    showNameScreen() {
+        this.showScreen('name-screen');
+        document.getElementById('monster-name').value = '';
+        document.getElementById('monster-description').value = '';
+        document.getElementById('monster-char-count').textContent = '0';
+    },
+
+    saveMonster() {
+        const name = document.getElementById('monster-name').value.trim();
+        const description = document.getElementById('monster-description').value.trim();
+
+        if (!name) {
+            alert('Please give your mood monster a name!');
+            return;
+        }
+
+        // Get mood monster data for AI analysis
+        const monsterData = window.blobCreator.getMoodMonsterData(window.currentBlob);
+
+        // Save to current blob
         if (window.currentBlob) {
-            window.currentBlob.setColor(parseInt(color.replace('#', ''), 16));
-            window.currentBlob.emoji = emoji;
+            window.currentBlob.monsterName = name;
+            window.currentBlob.monsterDescription = description;
+            window.currentBlob.monsterAnalysis = monsterData;
         }
 
         this.showActivityInput();

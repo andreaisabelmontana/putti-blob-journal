@@ -30,51 +30,26 @@
             <button class="big-button" onclick="UI.finishMolding()">Done Molding</button>
         </div>
 
-        <!-- Color Picker Screen -->
-        <div id="color-screen" class="screen">
-            <h2>How do you feel?</h2>
-            <div id="emotion-buttons" class="emotion-grid">
-                <button class="emotion-btn" data-color="#FFFFFF" data-emoji="😊" onclick="UI.selectEmotion(this)">
-                    <div class="emotion-color" style="background: #FFFFFF; border: 2px solid #DDD;"></div>
-                    <span class="emotion-emoji">😊</span>
-                    <span class="emotion-label">Calm</span>
-                </button>
-                <button class="emotion-btn" data-color="#87CEEB" data-emoji="😔" onclick="UI.selectEmotion(this)">
-                    <div class="emotion-color" style="background: #87CEEB;"></div>
-                    <span class="emotion-emoji">😔</span>
-                    <span class="emotion-label">Sad</span>
-                </button>
-                <button class="emotion-btn" data-color="#90EE90" data-emoji="⚡" onclick="UI.selectEmotion(this)">
-                    <div class="emotion-color" style="background: #90EE90;"></div>
-                    <span class="emotion-emoji">⚡</span>
-                    <span class="emotion-label">Energetic</span>
-                </button>
-                <button class="emotion-btn" data-color="#FF6B6B" data-emoji="😤" onclick="UI.selectEmotion(this)">
-                    <div class="emotion-color" style="background: #FF6B6B;"></div>
-                    <span class="emotion-emoji">😤</span>
-                    <span class="emotion-label">Angry</span>
-                </button>
-                <button class="emotion-btn" data-color="#FFE66D" data-emoji="😄" onclick="UI.selectEmotion(this)">
-                    <div class="emotion-color" style="background: #FFE66D;"></div>
-                    <span class="emotion-emoji">😄</span>
-                    <span class="emotion-label">Happy</span>
-                </button>
-                <button class="emotion-btn" data-color="#B19CD9" data-emoji="💜" onclick="UI.selectEmotion(this)">
-                    <div class="emotion-color" style="background: #B19CD9;"></div>
-                    <span class="emotion-emoji">💜</span>
-                    <span class="emotion-label">Loved</span>
-                </button>
-                <button class="emotion-btn" data-color="#FFB347" data-emoji="🔥" onclick="UI.selectEmotion(this)">
-                    <div class="emotion-color" style="background: #FFB347;"></div>
-                    <span class="emotion-emoji">🔥</span>
-                    <span class="emotion-label">Excited</span>
-                </button>
-                <button class="emotion-btn" data-color="#FFB6D9" data-emoji="💕" onclick="UI.selectEmotion(this)">
-                    <div class="emotion-color" style="background: #FFB6D9;"></div>
-                    <span class="emotion-emoji">💕</span>
-                    <span class="emotion-label">Caring</span>
-                </button>
-            </div>
+        <!-- Paint Your Mood Monster Screen -->
+        <div id="paint-screen" class="screen">
+            <h2>Paint Your Mood Monster</h2>
+            <p>Click on your blob to paint it with colors</p>
+            <div id="color-picker-container"></div>
+            <button class="big-button" onclick="UI.finishPainting()">Done Painting</button>
+        </div>
+
+        <!-- Name Your Monster Screen -->
+        <div id="name-screen" class="screen">
+            <h2>Name Your Mood Monster</h2>
+            <p>Give it a name that shows how you feel</p>
+            <input type="text" id="monster-name" placeholder="e.g., Grumpy Gary, Sparkle Friend..." maxlength="30"
+                   style="width: 100%; max-width: 400px; padding: 15px; font-size: 1.2em; border: 3px solid #E0E0E0; border-radius: 15px; margin: 20px 0;">
+            <h3 style="margin-top: 30px;">Describe Your Monster</h3>
+            <p style="font-size: 0.9em;">This is how I feel when...</p>
+            <textarea id="monster-description" placeholder="Tell me about this feeling..." maxlength="200"
+                      style="width: 100%; max-width: 400px; min-height: 100px; padding: 15px; font-size: 1.1em; border: 3px solid #E0E0E0; border-radius: 15px; resize: none;"></textarea>
+            <div class="char-count"><span id="monster-char-count">0</span>/200</div>
+            <button class="big-button" onclick="UI.saveMonster()">Save Monster</button>
         </div>
 
         <!-- Activity Input Screen -->
@@ -124,6 +99,7 @@
     <script src="/js/Blob.js"></script>
     <script src="/js/Physics.js"></script>
     <script src="/js/Molding.js"></script>
+    <script src="/js/BlobCreator.js"></script>
     <script src="/js/Storage.js"></script>
     <script src="/js/Replay.js"></script>
     <script src="/js/Dashboard.js"></script>

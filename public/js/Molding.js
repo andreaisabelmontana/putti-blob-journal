@@ -18,6 +18,7 @@ class VertexDragger {
         this.dragForce = 15.0;
 
         this.enabled = false;
+        this.paintMode = false;
 
         // Bind event handlers
         this.onPointerDown = this.onPointerDown.bind(this);
@@ -44,13 +45,25 @@ class VertexDragger {
 
     enable() {
         this.enabled = true;
+        this.paintMode = false;
     }
 
     disable() {
         this.enabled = false;
+        this.paintMode = false;
         this.isDragging = false;
         this.selectedVertex = null;
         this.selectedBlob = null;
+    }
+
+    enablePaintMode() {
+        this.enabled = true;
+        this.paintMode = true;
+    }
+
+    disablePaintMode() {
+        this.paintMode = false;
+        this.enabled = false;
     }
 
     getPointerPosition(event) {
@@ -99,6 +112,12 @@ class VertexDragger {
         });
 
         if (closestVertex) {
+            // If in paint mode, paint the vertex instead of dragging
+            if (this.paintMode && window.blobCreator) {
+                window.blobCreator.paintVertex(closestBlob, closestVertex.index);
+                return;
+            }
+
             this.isDragging = true;
             this.selectedVertex = closestVertex;
             this.selectedBlob = closestBlob;
@@ -118,7 +137,45 @@ class VertexDragger {
     }
 
     onPointerMove(event) {
-        if (!this.enabled || !this.isDragging || !this.selectedVertex) return;
+        if (!this.enabled) return;
+
+        // Handle paint mode differently
+        if (this.paintMode && window.blobCreator) {
+            event.preventDefault();
+            this.getPointerPosition(event);
+            this.raycaster.setFromCamera(this.mouse, this.camera);
+
+            // Find closest vertex to paint while dragging
+            let closestDistance = Infinity;
+            let closestVertex = null;
+            let closestBlob = null;
+
+            this.physicsManager.blobs.forEach(blob => {
+                blob.vertexBodies.forEach((vertexBody, index) => {
+                    const vertexPos = new THREE.Vector3(
+                        vertexBody.position.x,
+                        vertexBody.position.y,
+                        vertexBody.position.z
+                    );
+
+                    const distance = this.raycaster.ray.distanceToPoint(vertexPos);
+
+                    if (distance < closestDistance && distance < 0.5) {
+                        closestDistance = distance;
+                        closestVertex = { body: vertexBody, index: index };
+                        closestBlob = blob;
+                    }
+                });
+            });
+
+            if (closestVertex && closestBlob) {
+                window.blobCreator.paintVertex(closestBlob, closestVertex.index);
+            }
+            return;
+        }
+
+        // Regular dragging mode
+        if (!this.isDragging || !this.selectedVertex) return;
         event.preventDefault();
 
         this.getPointerPosition(event);
