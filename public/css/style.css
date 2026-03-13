@@ -1,0 +1,366 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #FFFFFF;
+    color: #333;
+    overflow: hidden;
+    touch-action: none;
+}
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+#canvas-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+canvas {
+    display: block;
+    touch-action: none;
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.screen.active {
+    display: flex;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+h2 {
+    font-size: 2em;
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+}
+
+p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    color: #666;
+    text-align: center;
+}
+
+/* Buttons */
+.big-button {
+    background: #FFE66D;
+    border: none;
+    border-radius: 20px;
+    padding: 20px 40px;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    margin: 10px;
+    min-width: 250px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    touch-action: manipulation;
+}
+
+.big-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.big-button:active {
+    transform: translateY(0);
+}
+
+.big-button.secondary {
+    background: #E0E0E0;
+}
+
+/* Emotion Grid */
+.emotion-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.emotion-btn {
+    background: white;
+    border: 3px solid #E0E0E0;
+    border-radius: 20px;
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+    min-height: 140px;
+    touch-action: manipulation;
+}
+
+.emotion-btn:hover {
+    transform: scale(1.05);
+    border-color: #FFE66D;
+}
+
+.emotion-btn:active {
+    transform: scale(0.98);
+}
+
+.emotion-color {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.emotion-emoji {
+    font-size: 2em;
+}
+
+.emotion-label {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Activity Input */
+#activity-input {
+    width: 100%;
+    max-width: 500px;
+    min-height: 150px;
+    padding: 20px;
+    font-size: 1.2em;
+    border: 3px solid #E0E0E0;
+    border-radius: 20px;
+    resize: none;
+    font-family: inherit;
+    margin-bottom: 10px;
+}
+
+.char-count {
+    color: #999;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+/* Person Indicator */
+#person-indicator {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    padding: 15px 30px;
+    background: #F5F5F5;
+    border-radius: 15px;
+}
+
+/* Molding Instructions */
+#molding-instructions {
+    font-size: 1em;
+    color: #999;
+    margin-bottom: 20px;
+}
+
+/* Spinner */
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #E0E0E0;
+    border-top-color: #FFE66D;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Summary Content */
+#summary-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.summary-item {
+    background: white;
+    border: 3px solid #E0E0E0;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.summary-emoji {
+    font-size: 2em;
+}
+
+.summary-text {
+    flex: 1;
+}
+
+.summary-person {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.summary-activity {
+    color: #666;
+    font-size: 0.95em;
+}
+
+.summary-art {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 15px;
+    margin-top: 10px;
+}
+
+/* History Timeline */
+#history-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 600px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.history-item {
+    background: white;
+    border: 3px solid #E0E0E0;
+    border-radius: 20px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.history-item:hover {
+    transform: translateX(5px);
+    border-color: #FFE66D;
+}
+
+.history-date {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.history-preview {
+    display: flex;
+    gap: 10px;
+    font-size: 1.5em;
+}
+
+/* Dashboard */
+#dashboard-content {
+    max-width: 800px;
+    width: 100%;
+}
+
+#mood-heatmap {
+    background: white;
+    border: 3px solid #E0E0E0;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+#mood-stats {
+    background: white;
+    border: 3px solid #E0E0E0;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+canvas#heatmap-canvas {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    .emotion-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .emotion-btn {
+        min-height: 120px;
+        padding: 15px;
+    }
+
+    .big-button {
+        min-width: 200px;
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .emotion-grid {
+        gap: 10px;
+    }
+
+    .emotion-btn {
+        min-height: 100px;
+        padding: 10px;
+    }
+
+    .emotion-color {
+        width: 50px;
+        height: 50px;
+    }
+
+    .emotion-emoji {
+        font-size: 1.5em;
+    }
+
+    .emotion-label {
+        font-size: 0.9em;
+    }
+}

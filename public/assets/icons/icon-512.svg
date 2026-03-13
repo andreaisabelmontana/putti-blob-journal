@@ -1,0 +1,6 @@
+
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="#FFE66D" rx="20%"/>
+  <circle cx="256" cy="256" r="170.66666666666666" fill="white" opacity="0.3"/>
+  <text x="256" y="286" font-family="Arial" font-size="128" text-anchor="middle">🌈</text>
+</svg>

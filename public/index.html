@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Putti Blob Family Journal</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/css/style.css">
+    <meta name="theme-color" content="#FFFFFF">
+</head>
+<body>
+    <div id="app">
+        <!-- 3D Canvas -->
+        <div id="canvas-container"></div>
+
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <h1>🌈 Blob Family Journal</h1>
+            <p>How are you and your family feeling today?</p>
+            <button class="big-button" onclick="UI.startJournal()">Start Today's Entry</button>
+            <button class="big-button secondary" onclick="UI.showHistory()">View History</button>
+            <button class="big-button secondary" onclick="UI.showDashboard()">Parent Dashboard</button>
+        </div>
+
+        <!-- Molding Screen -->
+        <div id="molding-screen" class="screen">
+            <h2 id="molding-title">Mold your blob</h2>
+            <p id="molding-instructions">Drag to shape how you feel</p>
+            <div id="person-indicator"></div>
+            <button class="big-button" onclick="UI.finishMolding()">Done Molding</button>
+        </div>
+
+        <!-- Color Picker Screen -->
+        <div id="color-screen" class="screen">
+            <h2>How do you feel?</h2>
+            <div id="emotion-buttons" class="emotion-grid">
+                <button class="emotion-btn" data-color="#FFFFFF" data-emoji="😊" onclick="UI.selectEmotion(this)">
+                    <div class="emotion-color" style="background: #FFFFFF; border: 2px solid #DDD;"></div>
+                    <span class="emotion-emoji">😊</span>
+                    <span class="emotion-label">Calm</span>
+                </button>
+                <button class="emotion-btn" data-color="#87CEEB" data-emoji="😔" onclick="UI.selectEmotion(this)">
+                    <div class="emotion-color" style="background: #87CEEB;"></div>
+                    <span class="emotion-emoji">😔</span>
+                    <span class="emotion-label">Sad</span>
+                </button>
+                <button class="emotion-btn" data-color="#90EE90" data-emoji="⚡" onclick="UI.selectEmotion(this)">
+                    <div class="emotion-color" style="background: #90EE90;"></div>
+                    <span class="emotion-emoji">⚡</span>
+                    <span class="emotion-label">Energetic</span>
+                </button>
+                <button class="emotion-btn" data-color="#FF6B6B" data-emoji="😤" onclick="UI.selectEmotion(this)">
+                    <div class="emotion-color" style="background: #FF6B6B;"></div>
+                    <span class="emotion-emoji">😤</span>
+                    <span class="emotion-label">Angry</span>
+                </button>
+                <button class="emotion-btn" data-color="#FFE66D" data-emoji="😄" onclick="UI.selectEmotion(this)">
+                    <div class="emotion-color" style="background: #FFE66D;"></div>
+                    <span class="emotion-emoji">😄</span>
+                    <span class="emotion-label">Happy</span>
+                </button>
+                <button class="emotion-btn" data-color="#B19CD9" data-emoji="💜" onclick="UI.selectEmotion(this)">
+                    <div class="emotion-color" style="background: #B19CD9;"></div>
+                    <span class="emotion-emoji">💜</span>
+                    <span class="emotion-label">Loved</span>
+                </button>
+                <button class="emotion-btn" data-color="#FFB347" data-emoji="🔥" onclick="UI.selectEmotion(this)">
+                    <div class="emotion-color" style="background: #FFB347;"></div>
+                    <span class="emotion-emoji">🔥</span>
+                    <span class="emotion-label">Excited</span>
+                </button>
+                <button class="emotion-btn" data-color="#FFB6D9" data-emoji="💕" onclick="UI.selectEmotion(this)">
+                    <div class="emotion-color" style="background: #FFB6D9;"></div>
+                    <span class="emotion-emoji">💕</span>
+                    <span class="emotion-label">Caring</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Activity Input Screen -->
+        <div id="activity-screen" class="screen">
+            <h2 id="activity-title">What happened today?</h2>
+            <textarea id="activity-input" placeholder="Tell me about it..." maxlength="200"></textarea>
+            <div class="char-count"><span id="char-count">0</span>/200</div>
+            <button class="big-button" onclick="UI.saveActivity()">Next</button>
+        </div>
+
+        <!-- Art Generation Screen -->
+        <div id="art-screen" class="screen">
+            <h2>Creating your art...</h2>
+            <div class="spinner"></div>
+            <p>Making something special! ✨</p>
+        </div>
+
+        <!-- Summary Screen -->
+        <div id="summary-screen" class="screen">
+            <h2>Today's Family Feelings</h2>
+            <div id="summary-content"></div>
+            <button class="big-button" onclick="UI.finishEntry()">Save & Finish</button>
+        </div>
+
+        <!-- History Screen -->
+        <div id="history-screen" class="screen">
+            <h2>Past 7 Days</h2>
+            <div id="history-timeline"></div>
+            <button class="big-button secondary" onclick="UI.backToWelcome()">Back</button>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard-screen" class="screen">
+            <h2>Parent Dashboard</h2>
+            <div id="dashboard-content">
+                <div id="mood-heatmap"></div>
+                <div id="mood-stats"></div>
+            </div>
+            <button class="big-button secondary" onclick="UI.backToWelcome()">Back</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"></script>
+    <script src="/js/scene.js"></script>
+    <script src="/js/Blob.js"></script>
+    <script src="/js/Physics.js"></script>
+    <script src="/js/Molding.js"></script>
+    <script src="/js/Storage.js"></script>
+    <script src="/js/Replay.js"></script>
+    <script src="/js/Dashboard.js"></script>
+    <script src="/js/UI.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>
