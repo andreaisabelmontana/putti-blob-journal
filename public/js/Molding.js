@@ -15,7 +15,7 @@ class VertexDragger {
         this.selectedBlob = null;
         this.dragPlane = new THREE.Plane();
         this.dragPoint = new THREE.Vector3();
-        this.dragForce = 15.0;
+        this.dragForce = 20.0;
 
         this.enabled = false;
         this.paintMode = false;

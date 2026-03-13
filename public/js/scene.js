@@ -29,21 +29,28 @@ const Scene = {
 
         document.getElementById('canvas-container').appendChild(this.renderer.domElement);
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.6);
+        // Lighting - soft and diffuse for putty feel
+        const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.8);
         this.scene.add(ambientLight);
 
-        const hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 0xCCCCCC, 0.4);
+        const hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 0xF0F0F0, 0.5);
         this.scene.add(hemisphereLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.5);
-        directionalLight.position.set(5, 10, 7.5);
+        const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.4);
+        directionalLight.position.set(3, 5, 4);
         directionalLight.castShadow = true;
         directionalLight.shadow.camera.left = -10;
         directionalLight.shadow.camera.right = 10;
         directionalLight.shadow.camera.top = 10;
         directionalLight.shadow.camera.bottom = -10;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
         this.scene.add(directionalLight);
+
+        // Add subtle rim light
+        const rimLight = new THREE.DirectionalLight(0xFFFFFF, 0.3);
+        rimLight.position.set(-2, 3, -2);
+        this.scene.add(rimLight);
 
         // Physics World
         this.world = new CANNON.World();

@@ -26,8 +26,8 @@ class MoldableBlob {
         this.centerBody = new CANNON.Body({
             mass: 1,
             shape: new CANNON.Sphere(0.3),
-            linearDamping: 0.5,
-            angularDamping: 0.9
+            linearDamping: 0.3,
+            angularDamping: 0.7
         });
         this.world.addBody(this.centerBody);
 
@@ -52,9 +52,9 @@ class MoldableBlob {
             const z = positions.getZ(i);
 
             const vertexBody = new CANNON.Body({
-                mass: 0.1,
+                mass: 0.15,
                 shape: new CANNON.Sphere(0.05),
-                linearDamping: 0.8,
+                linearDamping: 0.6,
                 position: new CANNON.Vec3(x, y, z)
             });
 
@@ -65,8 +65,8 @@ class MoldableBlob {
             const restLength = Math.sqrt(x * x + y * y + z * z);
             const spring = new CANNON.Spring(this.centerBody, vertexBody, {
                 restLength: restLength,
-                stiffness: 50,
-                damping: 5
+                stiffness: 35,
+                damping: 3
             });
 
             this.springs.push(spring);
@@ -99,8 +99,8 @@ class MoldableBlob {
                 if (distance < 1.2) {
                     const spring = new CANNON.Spring(this.vertexBodies[i], this.vertexBodies[j], {
                         restLength: distance,
-                        stiffness: 30,
-                        damping: 3
+                        stiffness: 25,
+                        damping: 2
                     });
                     this.springs.push(spring);
                 }

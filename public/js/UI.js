@@ -48,7 +48,7 @@ const UI = {
         }
     },
 
-    startJournal() {
+    async startJournal() {
         this.currentPersonIndex = 0;
         this.journalData = [];
 
@@ -57,64 +57,78 @@ const UI = {
             window.physicsManager.clearBlobs();
         }
 
+        // Show yesterday's monster briefly if it exists
+        await this.showYesterdayMonster();
+
         this.showMoldingScreen(this.people[0]);
     },
 
-    showMoldingScreen(personType) {
-        const personLabel = this.peopleLabels[personType];
-        document.getElementById('molding-title').textContent = `Mold ${personLabel}'s blob`;
-        document.getElementById('molding-instructions').textContent = 'Drag to shape how they feel';
-        document.getElementById('person-indicator').textContent = `👤 ${personLabel}`;
+    async showYesterdayMonster() {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const dateStr = yesterday.toISOString().split('T')[0];
 
+        const entry = await Storage.loadEntry(dateStr);
+
+        if (entry && entry.blobs && entry.blobs.length > 0) {
+            const welcomeMsg = document.getElementById('welcome-message');
+            if (welcomeMsg) {
+                const monsterName = entry.blobs[0].monsterName || 'your monster';
+                welcomeMsg.textContent = `Yesterday you created "${monsterName}"! Ready for today?`;
+            }
+        }
+    },
+
+    showMoldingScreen(personType) {
         this.showScreen('molding-screen');
 
-        // Create blob for this person
-        const positions = [
-            { x: 0, y: 0, z: 0 },      // me
-            { x: -3, y: 2, z: -1 },    // mom
-            { x: 3, y: 2, z: -1 },     // dad
-            { x: -2, y: -2, z: -1 },   // friend1
-            { x: 2, y: -2, z: -1 },    // friend2
-            { x: 0, y: 3, z: -2 }      // special
-        ];
+        // Enable playtime mode (minimal UI)
+        document.body.classList.add('playtime-mode');
 
+        // Create fresh white blob
         const blob = new MoldableBlob(
             Scene.scene,
             Scene.world,
             0xFFFFFF,
-            '😊',
+            '✨',
             personType
         );
 
-        const pos = positions[this.currentPersonIndex];
-        blob.setPosition(pos.x, pos.y, pos.z);
+        blob.setPosition(0, 0, 0);
 
         window.physicsManager.addBlob(blob);
         window.currentBlob = blob;
 
         // Enable dragging
         window.vertexDragger.enable();
+
+        // Focus camera on blob
+        Scene.camera.position.set(0, 0, 5);
+        Scene.camera.lookAt(0, 0, 0);
     },
 
     finishMolding() {
         window.vertexDragger.disable();
+        document.body.classList.remove('playtime-mode');
         this.showPaintingScreen();
     },
 
     showPaintingScreen() {
         this.showScreen('paint-screen');
+        document.body.classList.add('playtime-mode');
 
         // Initialize color picker UI
         if (window.blobCreator) {
             window.blobCreator.createColorPicker();
         }
 
-        // Enable painting mode - click vertices to paint them
+        // Enable painting mode
         window.vertexDragger.enablePaintMode();
     },
 
     finishPainting() {
         window.vertexDragger.disablePaintMode();
+        document.body.classList.remove('playtime-mode');
         this.showNameScreen();
     },
 
@@ -125,7 +139,7 @@ const UI = {
         document.getElementById('monster-char-count').textContent = '0';
     },
 
-    saveMonster() {
+    async saveMonster() {
         const name = document.getElementById('monster-name').value.trim();
         const description = document.getElementById('monster-description').value.trim();
 
@@ -142,9 +156,38 @@ const UI = {
             window.currentBlob.monsterName = name;
             window.currentBlob.monsterDescription = description;
             window.currentBlob.monsterAnalysis = monsterData;
+
+            // Save immediately (simplified flow - just one monster per day)
+            const today = new Date().toISOString().split('T')[0];
+            const blobData = window.currentBlob.serialize();
+            blobData.monsterName = name;
+            blobData.monsterDescription = description;
+            blobData.monsterAnalysis = monsterData;
+
+            try {
+                await Storage.saveEntry(today, [blobData]);
+                this.showCompletionMessage(name);
+            } catch (error) {
+                console.error('Failed to save:', error);
+                alert('Oops! Could not save your monster. Try again?');
+            }
+        }
+    },
+
+    showCompletionMessage(monsterName) {
+        this.showScreen('welcome-screen');
+
+        const welcomeMsg = document.getElementById('welcome-message');
+        if (welcomeMsg) {
+            welcomeMsg.textContent = `Great job! "${monsterName}" is saved. See you tomorrow!`;
         }
 
-        this.showActivityInput();
+        // Clear blobs after a moment
+        setTimeout(() => {
+            if (window.physicsManager) {
+                window.physicsManager.clearBlobs();
+            }
+        }, 2000);
     },
 
     showActivityInput() {
@@ -248,6 +291,52 @@ const UI = {
         this.backToWelcome();
     },
 
+    showGallery() {
+        this.showScreen('gallery-screen');
+        this.loadGallery();
+    },
+
+    async loadGallery() {
+        const gallery = document.getElementById('blob-gallery');
+        gallery.innerHTML = '<p>Loading your monsters...</p>';
+
+        const entries = await Storage.getAllEntries();
+
+        if (!entries || entries.length === 0) {
+            gallery.innerHTML = '<p style="text-align: center; color: #999;">No monsters yet! Create your first one.</p>';
+            return;
+        }
+
+        gallery.innerHTML = '';
+
+        // Show most recent first
+        entries.reverse().forEach(entry => {
+            if (entry.blobs && entry.blobs.length > 0) {
+                entry.blobs.forEach(blob => {
+                    if (blob.monsterName) {
+                        const item = document.createElement('div');
+                        item.className = 'gallery-item';
+
+                        const date = new Date(entry.date);
+                        const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
+
+                        item.innerHTML = `
+                            <div class="gallery-item-name">${blob.monsterName}</div>
+                            <div class="gallery-item-date">${dateStr}</div>
+                            <p style="font-size: 0.8em; color: #666; margin-top: 5px;">${blob.monsterDescription || ''}</p>
+                        `;
+
+                        item.onclick = () => {
+                            alert(`${blob.monsterName}\n\n${blob.monsterDescription || 'No description'}\n\nCreated: ${dateStr}`);
+                        };
+
+                        gallery.appendChild(item);
+                    }
+                });
+            }
+        });
+    },
+
     showHistory() {
         this.showScreen('history-screen');
         Replay.loadHistory();
@@ -264,6 +353,7 @@ const UI = {
             window.physicsManager.clearBlobs();
         }
 
+        document.body.classList.remove('playtime-mode');
         this.showScreen('welcome-screen');
     }
 };

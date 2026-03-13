@@ -6,10 +6,27 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: #FFFFFF;
+    background: #FAFAFA;
     color: #333;
     overflow: hidden;
     touch-action: none;
+}
+
+/* Minimal UI mode for playtime */
+body.playtime-mode .screen {
+    background: rgba(255, 255, 255, 0.0);
+}
+
+body.playtime-mode h2,
+body.playtime-mode p {
+    display: none;
+}
+
+body.playtime-mode .big-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 100;
 }
 
 #app {
@@ -25,6 +42,7 @@ body {
     top: 0;
     left: 0;
     z-index: 1;
+    background: radial-gradient(circle at center, #FFFFFF 0%, #F5F5F5 100%);
 }
 
 canvas {
@@ -189,6 +207,76 @@ p {
     font-size: 1em;
     color: #999;
     margin-bottom: 20px;
+}
+
+/* Blob Gallery */
+#blob-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.gallery-item {
+    background: white;
+    border: 3px solid #E0E0E0;
+    border-radius: 20px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+    border-color: #FFE66D;
+}
+
+.gallery-item canvas {
+    width: 100%;
+    height: 120px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.gallery-item-name {
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.gallery-item-date {
+    font-size: 0.75em;
+    color: #999;
+}
+
+/* Floating instructions */
+.floating-instruction {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px 30px;
+    border-radius: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    font-size: 1.1em;
+    z-index: 50;
+    animation: fadeInDown 0.5s ease;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 }
 
 /* Spinner */

@@ -15,27 +15,28 @@
 
         <!-- Welcome Screen -->
         <div id="welcome-screen" class="screen active">
-            <h1>🌈 Blob Family Journal</h1>
-            <p>How are you and your family feeling today?</p>
-            <button class="big-button" onclick="UI.startJournal()">Start Today's Entry</button>
-            <button class="big-button secondary" onclick="UI.showHistory()">View History</button>
-            <button class="big-button secondary" onclick="UI.showDashboard()">Parent Dashboard</button>
+            <h1>🎨 Daily Putty Time</h1>
+            <p id="welcome-message">Ready to play with your putty?</p>
+            <button class="big-button" onclick="UI.startJournal()">Create Today's Monster</button>
+            <button class="big-button secondary" onclick="UI.showGallery()">My Monster Collection</button>
+            <button class="big-button secondary" onclick="UI.showDashboard()">Parent View</button>
         </div>
 
         <!-- Molding Screen -->
         <div id="molding-screen" class="screen">
-            <h2 id="molding-title">Mold your blob</h2>
-            <p id="molding-instructions">Drag to shape how you feel</p>
-            <div id="person-indicator"></div>
-            <button class="big-button" onclick="UI.finishMolding()">Done Molding</button>
+            <div class="floating-instruction" id="mold-instruction">
+                🖐️ Touch and drag to shape your putty
+            </div>
+            <button class="big-button" onclick="UI.finishMolding()">Next: Paint It</button>
         </div>
 
         <!-- Paint Your Mood Monster Screen -->
         <div id="paint-screen" class="screen">
-            <h2>Paint Your Mood Monster</h2>
-            <p>Click on your blob to paint it with colors</p>
+            <div class="floating-instruction">
+                🎨 Pick a color and paint your monster
+            </div>
             <div id="color-picker-container"></div>
-            <button class="big-button" onclick="UI.finishPainting()">Done Painting</button>
+            <button class="big-button" onclick="UI.finishPainting()">Next: Name It</button>
         </div>
 
         <!-- Name Your Monster Screen -->
@@ -72,6 +73,13 @@
             <h2>Today's Family Feelings</h2>
             <div id="summary-content"></div>
             <button class="big-button" onclick="UI.finishEntry()">Save & Finish</button>
+        </div>
+
+        <!-- Gallery Screen -->
+        <div id="gallery-screen" class="screen">
+            <h2>My Monster Collection</h2>
+            <div id="blob-gallery"></div>
+            <button class="big-button secondary" onclick="UI.backToWelcome()">Back</button>
         </div>
 
         <!-- History Screen -->
